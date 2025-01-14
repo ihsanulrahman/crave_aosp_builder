@@ -533,6 +533,17 @@ jobs:
         cd $PROJECTFOLDER
         crave stop --all
 
+      # Upload to Telegram
+    - name: Upload Using telegram-upload
+      run: |
+        cd $PROJECTFOLDER
+        crave ssh -- "export TG_UPLOAD_LIMIT="${{ secrets.TG_UPLOAD_LIMIT }}"; bash /opt/crave/telegram/upload.sh '${{ github.event.inputs.DEVICE_NAME }}' '${{ secrets.EXTRA_FILES }}'"
+      env:
+        chatId: ${{ secrets.TELEGRAM_TO }}
+        botToken: ${{ secrets.TELEGRAM_TOKEN }}
+        
+      continue-on-error: true
+
       # Upload '.zip's and '.img's directly from 'crave' ssh.
     - name: Upload build artifact(s)
       run: |
